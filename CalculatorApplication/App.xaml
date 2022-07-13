@@ -4,4 +4,33 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CalculatorApplication">
 
+    <Application.Resources>
+        <ControlTemplate x:Key="DefaultButtonStyles" TargetType="Button">
+            <Border BorderBrush="Azure" BorderThickness="1,1,1,1" CornerRadius="1,1,1,1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border Opacity="0" HorizontalAlignment="Stretch" x:Name="glow" Width="auto" Grid.RowSpan="2" CornerRadius="4,4,4,4"></Border>
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Grid.RowSpan="2" Padding="4" />
+                    <Border HorizontalAlignment="Stretch" Margin="0,0,0,0" x:Name="shine" Width="Auto" CornerRadius="4,4,0,0" >
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="0.5, 0.9" StartPoint="0.5,0.03">
+                                <GradientStop Color="#99FFFFFF" Offset="0" />
+                                <GradientStop Color="#33FFFFFF" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+        <Style TargetType="Button">
+            <Setter Property="Template" Value="{StaticResource DefaultButtonStyles}" />
+            <Setter Property="Foreground" Value="GhostWhite" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="FontSize" Value="32" />
+        </Style>
+    </Application.Resources>
 </Application>
