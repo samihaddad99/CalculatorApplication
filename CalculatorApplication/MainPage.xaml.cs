@@ -16,15 +16,19 @@ using Windows.UI.Xaml.Navigation;
 /**
  * Author: Sami Haddad
  * Date: Jul-13-2022
+ * Last Modified: Jul-18-2022
  * File: CalculatorApplication (MainPage.xaml.cs)
  * Desc: A calculator application that is graphically modelled with XAML and UWP
  *      and the logic is implemented using C#.
- * Source(s): https://www.youtube.com/watch?v=xfvJSt2NMH4&ab_channel=AllTech (uwp calculator with c# and xaml)
- * #todo:
- *      - fix button collision boundary (where it registers the click [possibly something to do with using grid and stretch?])
- *      - implement different styles for the operators (+, -, /, x, =)
- *      - implement different styles for the modifiers (%, ., +/-)
- *      - implement logic for the modifiers (%, ., +/-)
+ * As adapted from: https://www.youtube.com/watch?v=xfvJSt2NMH4&ab_channel=AllTech (uwp calculator with c# and xaml)
+ * Added Features: 
+ *      - Improved styling
+ *      - Percent Functionality
+ *      - Decimal Functionality
+ *      - Negate Functionality
+ *  #TODO:
+ *      - integrate keys/numpad
+ *      - integrate better button 'click' registration (why is this happening?)
  */
 
 namespace CalculatorApplication
@@ -71,7 +75,19 @@ namespace CalculatorApplication
             }
         }
 
-        enum Operation { MINUS = 1, PLUS = 2, DIV = 3, TIMES = 4, NUMBER = 5 };
+        enum Operation
+        { 
+            MINUS = 1, 
+            PLUS = 2, 
+            DIV = 3, 
+            TIMES = 4, 
+            NUMBER = 5, 
+            PERCENT = 6,
+            DECIMAL = 7,
+            NEGATE = 8
+        };
+
+            
         private void AddOperationToResult(Operation operation)
         {
             if (txtResult.Text.Length == 1 && txtResult.Text == "0") // empty check
@@ -85,6 +101,9 @@ namespace CalculatorApplication
                 case Operation.PLUS: txtResult.Text += "+"; break;
                 case Operation.DIV: txtResult.Text += "/"; break;
                 case Operation.TIMES: txtResult.Text += "x"; break;
+                case Operation.PERCENT: txtResult.Text += "%"; break;
+                case Operation.DECIMAL: txtResult.Text += "."; break;
+                case Operation.NEGATE: txtResult.Text += '_'; break; 
             }
         }
 
@@ -145,7 +164,7 @@ namespace CalculatorApplication
 
         private void btnDecimal_Click(object sender, RoutedEventArgs e)
         {
-
+            AddOperationToResult(Operation.DECIMAL);
         }
 
         private class Operand
@@ -186,6 +205,7 @@ namespace CalculatorApplication
                         case '+': op = Operation.PLUS; break;
                         case '/': op = Operation.DIV; break;
                         case 'x': op = Operation.TIMES; break;
+                        case '.': op = Operation.DECIMAL; break;
                     }
                     AddOperandToTree(ref tree, new Operand() { operation = op });
                 }
@@ -231,6 +251,7 @@ namespace CalculatorApplication
                     case Operation.PLUS: subResult = Calc(tree.left) + Calc(tree.right); break;
                     case Operation.DIV: subResult = Calc(tree.left) / Calc(tree.right); break;
                     case Operation.TIMES: subResult = Calc(tree.left) * Calc(tree.right); break;
+                    /*case Operation.DECIMAL: subResult;*/
                 }
                 return subResult;
             }
@@ -268,12 +289,31 @@ namespace CalculatorApplication
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
         {
-
+            txtResult.Text = (Convert.ToDouble(txtResult.Text) / 100).ToString();
         }
 
         private void btnNegate_Click(object sender, RoutedEventArgs e)
         {
+            if (txtResult.Text.Substring(0, 1).Equals("0"))
+            {
+                // do nothing
+            }
+            else
+            {
+                String subtext = txtResult.Text.Substring(0, 1);
+                if (subtext.Equals("-")) // if number is already negative, then make positive
+                {
+                    int strlen = txtResult.Text.Length;
+                    txtResult.Text = txtResult.Text.Substring(1, strlen - 1);
+                }
+                else
+                    txtResult.Text = "-" + txtResult.Text;
+            }
+        }
 
+        private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.Key.ToString());
         }
     }
 }

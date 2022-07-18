@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="700">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="700" KeyDown="Page_KeyDown">
     <Grid HorizontalAlignment="Left" Width="700">
         <TextBlock HorizontalAlignment="Center" Margin="0,111,0,0" FontSize="50" Text="Calculator" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBox IsReadOnly="True" Foreground="Azure" x:Name="txtResult" HorizontalAlignment="Center" VerticalContentAlignment="Center" Margin="0,210,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="81" Width="622"/>

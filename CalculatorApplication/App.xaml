@@ -12,7 +12,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Border Opacity="0" HorizontalAlignment="Stretch" x:Name="glow" Width="auto" Grid.RowSpan="2" CornerRadius="4,4,4,4"></Border>
+                    <Border Opacity="0" HorizontalAlignment="Stretch" x:Name="glow" Width="Auto" Grid.RowSpan="2" CornerRadius="4,4,4,4"></Border>
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Grid.RowSpan="2" Padding="4" />
                     <Border HorizontalAlignment="Stretch" Margin="0,0,0,0" x:Name="shine" Width="Auto" CornerRadius="4,4,0,0" >
                         <Border.Background>
