@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="700" KeyDown="Page_KeyDown">
     <Grid HorizontalAlignment="Left" Width="700">
         <TextBlock HorizontalAlignment="Center" Margin="0,111,0,0" FontSize="50" Text="Calculator" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <TextBox IsReadOnly="True" Foreground="Azure" x:Name="txtResult" HorizontalAlignment="Center" VerticalContentAlignment="Center" Margin="0,210,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="81" Width="622"/>
+        <TextBox IsReadOnly="True" Foreground="Azure" x:Name="txtResult" HorizontalAlignment="Right" VerticalContentAlignment="Center" Margin="0,210,151,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="81" Width="510"/>
 
 
         <Grid Margin="39,340,39,76">
@@ -46,7 +46,8 @@
             <Button x:Name="btn8" Content="8" Grid.Row="1" Grid.Column="1" Click="btn8_Click"  />
             <Button x:Name="btn9" Content="9"  Grid.Row="1" Grid.Column="2" Click="btn9_Click" />
         </Grid>
-        
+        <Button Content="&lt;-" HorizontalAlignment="Left" Margin="554,210,0,0" VerticalAlignment="Top" Height="81" Width="107" Click="Button_Click"/>
+
 
     </Grid>
 </Page>

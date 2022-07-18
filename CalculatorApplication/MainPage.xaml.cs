@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -26,8 +28,12 @@ using Windows.UI.Xaml.Navigation;
  *      - Percent Functionality
  *      - Decimal Functionality
  *      - Negate Functionality
+ *      - Integrated All NumberPad Features (NumPad1-9, '+', '-', '/', '*', '.', and 'Enter' as '=')
+ *      - Integrated Keydown features (C to clear, Backspace to delete from the right)
  *  #TODO:
- *      - integrate keys/numpad
+ *      - integrate More keys (Shift+'5' = '%', Shift+'8' = '*') (tried/failed with method IsShiftKeyPressed)
+ *              - Implement (- {unassigned}, / {unassigned}, = {unassigned}, Shift+'=' {unnassigned: results in '+'}
+ *                  reference : https://docs.microsoft.com/en-us/uwp/api/windows.system.virtualkey?view=winrt-22621
  *      - integrate better button 'click' registration (why is this happening?)
  */
 
@@ -86,7 +92,6 @@ namespace CalculatorApplication
             DECIMAL = 7,
             NEGATE = 8
         };
-
             
         private void AddOperationToResult(Operation operation)
         {
@@ -251,12 +256,16 @@ namespace CalculatorApplication
                     case Operation.PLUS: subResult = Calc(tree.left) + Calc(tree.right); break;
                     case Operation.DIV: subResult = Calc(tree.left) / Calc(tree.right); break;
                     case Operation.TIMES: subResult = Calc(tree.left) * Calc(tree.right); break;
-                    /*case Operation.DECIMAL: subResult;*/
                 }
                 return subResult;
             }
         }
         private void btnEquals_Click(object sender, RoutedEventArgs e)
+        {
+            SetEquals();
+        }
+
+        void SetEquals()
         {
             if (string.IsNullOrEmpty(txtResult.Text)) return;
 
@@ -289,7 +298,7 @@ namespace CalculatorApplication
 
         private void btnPercent_Click(object sender, RoutedEventArgs e)
         {
-            txtResult.Text = (Convert.ToDouble(txtResult.Text) / 100).ToString();
+            ToPercent();
         }
 
         private void btnNegate_Click(object sender, RoutedEventArgs e)
@@ -313,7 +322,107 @@ namespace CalculatorApplication
 
         private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(e.Key.ToString());
+            switch (e.Key)
+            {
+                case VirtualKey.NumberPad0: AddNumberToResult(0); break;
+                case VirtualKey.NumberPad1: AddNumberToResult(1); break;
+                case VirtualKey.NumberPad2: AddNumberToResult(2); break;
+                case VirtualKey.NumberPad3: AddNumberToResult(3); break;
+                case VirtualKey.NumberPad4: AddNumberToResult(4); break;
+                case VirtualKey.NumberPad5: AddNumberToResult(5); break;
+                case VirtualKey.NumberPad6: AddNumberToResult(6); break;
+                case VirtualKey.NumberPad7: AddNumberToResult(7); break;
+                case VirtualKey.NumberPad8: AddNumberToResult(8); break;
+                case VirtualKey.NumberPad9: AddNumberToResult(9); break;
+                case VirtualKey.Number0: AddNumberToResult(0); break;
+                case VirtualKey.Number1: AddNumberToResult(1); break;
+                case VirtualKey.Number2: AddNumberToResult(2); break;
+                case VirtualKey.Number3: AddNumberToResult(3); break;
+                case VirtualKey.Number4: AddNumberToResult(4); break;
+                case VirtualKey.Number5: AddNumberToResult(5); break;
+                case VirtualKey.Number6: AddNumberToResult(6); break;
+                case VirtualKey.Number7: AddNumberToResult(7); break;
+                case VirtualKey.Number8: AddNumberToResult(8); break;
+                case VirtualKey.Number9: AddNumberToResult(9); break;
+                case VirtualKey.C: ClearText(); break; // C to clear
+                case VirtualKey.Back: DeleteLast(); break;
+                /* NumberPad Operations */
+                case VirtualKey.Add: AddOperationToResult(Operation.PLUS); break;
+                case VirtualKey.Subtract: AddOperationToResult(Operation.MINUS); break;
+                case VirtualKey.Divide: AddOperationToResult(Operation.DIV); break;
+                case VirtualKey.Multiply: AddOperationToResult(Operation.TIMES); break;
+                case VirtualKey.Enter: SetEquals(); break;
+                case VirtualKey.Decimal: AddOperationToResult(Operation.DECIMAL); break;
+
+                default:
+                    // trying to implement shift+normal keyboard buttons (for non-numpad keyboards)
+                    if (IsShiftKeyPressed())
+                    {
+                        switch (e.Key)
+                        {
+                            case VirtualKey.Number5: ToPercent(); break;
+                            case VirtualKey.Number8: AddOperationToResult(Operation.TIMES); break;
+                        }
+                    }; break;
+
+            }
+        }
+
+        /*
+         * ToPercent
+         * Converts whatever number in the TextBox to its percent value
+         */
+        void ToPercent()
+        {
+            txtResult.Text = (Convert.ToDouble(txtResult.Text) / 100).ToString();
+        }
+        /*
+         * 
+         * DeleteLast
+         * Deletes the last string in the TextBox if the string length is more than 1
+         *      if string length = 1 or 0, then will clear the TextBox (replace whatever number/symbol with '0')
+         */
+        void DeleteLast()
+        {
+            String curr = txtResult.Text;
+            int strlen = curr.Length;
+            if(strlen == 0 || strlen == 1) // do nothing
+            {
+                ClearText();
+            }
+            else
+            {
+                curr = curr.Substring(0, strlen - 1);
+                txtResult.Text = curr;
+            }
+            // else do nth
+        }
+
+        /**
+         * ClearText
+         *      sets the text to '0'
+         */
+        void ClearText()
+        {
+            txtResult.Text = "0";
+        }
+
+        /**
+         * IsShiftKeyPressed()
+         * returns true if a shift key is pressed (and held down), and false otherwise
+         * Adapted from: https://docs.microsoft.com/en-us/windows/apps/design/input/keyboard-events
+         */
+        private static bool IsShiftKeyPressed()
+        {
+            var leftShiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.LeftShift);
+            var rightShiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.RightShift);
+            // var shiftState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
+            return (leftShiftState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down && (rightShiftState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteLast();
         }
     }
 }
