@@ -353,9 +353,7 @@ namespace CalculatorApplication
                 case VirtualKey.Multiply: AddOperationToResult(Operation.TIMES); break;
                 case VirtualKey.Enter: SetEquals(); break;
                 case VirtualKey.Decimal: AddOperationToResult(Operation.DECIMAL); break;
-
-                default:
-                    // trying to implement shift+normal keyboard buttons (for non-numpad keyboards)
+                case VirtualKey.Shift: // not working properly
                     if (IsShiftKeyPressed())
                     {
                         switch (e.Key)
@@ -364,6 +362,9 @@ namespace CalculatorApplication
                             case VirtualKey.Number8: AddOperationToResult(Operation.TIMES); break;
                         }
                     }; break;
+                default:
+                    // trying to implement shift+normal keyboard buttons (for non-numpad keyboards)
+                    break;
 
             }
         }
